@@ -1,0 +1,81 @@
+---
+title: Listing
+description: Data model for items listed on TruequeU.
+---
+
+A `Listing` represents an item posted by a student on the marketplace. Each listing captures the item details, current availability status, and whether the current user has saved it as a favorite.
+
+## Fields
+
+<ResponseField name="id" type="string" required>
+  Unique identifier for the listing. Generated at creation time using `Date.now()` or a similar mechanism.
+</ResponseField>
+
+<ResponseField name="title" type="string" required>
+  Display title for the listing. Must be between 3 and 100 characters.
+</ResponseField>
+
+<ResponseField name="description" type="string" required>
+  Full description of the item. Must be between 10 and 1000 characters.
+</ResponseField>
+
+<ResponseField name="price" type="number" required>
+  Price in the local currency. Must be between 0 and 999,999. A price of `0` indicates a free item.
+</ResponseField>
+
+<ResponseField name="category" type="string" required>
+  Category that the item belongs to (e.g., `"Libros"`, `"Electrónicos"`, `"Ropa"`).
+</ResponseField>
+
+<ResponseField name="status" type="ListingStatus" required>
+  Current availability of the listing. See [ListingStatus](#listingstatus) below.
+</ResponseField>
+
+<ResponseField name="images" type="string[]" required>
+  Array of image URLs associated with the listing. May be empty if no images have been uploaded.
+</ResponseField>
+
+<ResponseField name="ownerId" type="string" required>
+  The `id` of the `User` who created the listing.
+</ResponseField>
+
+<ResponseField name="isFavorite" type="boolean" required>
+  Whether the currently logged-in user has favorited this listing. This value is per-user and stored locally — it is not shared across accounts.
+</ResponseField>
+
+## ListingStatus
+
+`ListingStatus` is a union type with three possible values:
+
+```typescript
+type ListingStatus = "available" | "reserved" | "sold";
+```
+
+| Value | Meaning |
+|---|---|
+| `"available"` | The item is still available and can be purchased or reserved. |
+| `"reserved"` | The item has been reserved by a buyer but the trade has not yet completed. |
+| `"sold"` | The trade is complete; the item is no longer available. |
+
+## Example
+
+```typescript
+const listing: Listing = {
+  id: "listing-1747000000000",
+  title: "Cálculo diferencial - Stewart",
+  description: "Libro en buen estado, algunos subrayados en lápiz. Edición 7.",
+  price: 80000,
+  category: "Libros",
+  status: "available",
+  images: [
+    "https://example.com/images/calculo-front.jpg",
+    "https://example.com/images/calculo-back.jpg"
+  ],
+  ownerId: "u1747000000001",
+  isFavorite: false
+};
+```
+
+<Note>
+  `isFavorite` is stored in local state via the Zustand store and is not synchronized with other users or persisted to a remote server. It reflects the preference of the currently logged-in user only.
+</Note>

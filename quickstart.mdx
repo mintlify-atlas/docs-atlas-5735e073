@@ -1,80 +1,95 @@
 ---
-title: "Quickstart"
-description: "Start building awesome documentation in minutes"
+title: Quickstart
+description: Get up and running with TruequeU in under five minutes — create an account, browse listings, and post your first item.
 ---
 
-## Get started in three steps
+This guide walks you through the most common tasks on TruequeU. By the end, you'll have an account, know how to find items, and have created your first listing.
 
-Get your documentation site running locally and make your first customization.
+<Steps>
+  <Step title="Create an account">
+    Navigate to the **Sign Up** page (`/signup`) and fill in the registration form:
 
-### Step 1: Set up your local environment
+    - **Name**: your display name, visible to other students
+    - **Email**: used to log in — must not already be registered
+    - **Password**: must meet all of the following requirements:
 
-<AccordionGroup>
-  <Accordion icon="copy" title="Clone your docs locally">
-    During the onboarding process, you created a GitHub repository with your docs content if you didn't already have one. You can find a link to this repository in your [dashboard](https://dashboard.mintlify.com).
-    
-    To clone the repository locally so that you can make and preview changes to your docs, follow the [Cloning a repository](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository) guide in the GitHub docs.
-  </Accordion>
-  <Accordion icon="rectangle-terminal" title="Start the preview server">
-    1. Install the Mintlify CLI: `npm i -g mint`
-    2. Navigate to your docs directory and run: `mint dev`
-    3. Open `http://localhost:3000` to see your docs live!
-    
-    <Tip>Your preview updates automatically as you edit files.</Tip>
-  </Accordion>
-</AccordionGroup>
+    | Requirement | Details |
+    |---|---|
+    | Minimum length | 8 characters |
+    | Uppercase letter | At least one (A–Z) |
+    | Lowercase letter | At least one (a–z) |
+    | Number | At least one digit (0–9) |
+    | Special character | At least one (e.g. `!`, `@`, `#`, `$`) |
 
-### Step 2: Deploy your changes
+    <Tip>
+      Choose a password you haven't used elsewhere. TruequeU stores credentials in your browser's local storage, so treat your account like any other web account.
+    </Tip>
 
-<AccordionGroup>
-  <Accordion icon="github" title="Install our GitHub app">
-    Install the Mintlify GitHub app from your [dashboard](https://dashboard.mintlify.com/settings/organization/github-app).
-    
-    Our GitHub app automatically deploys your changes to your docs site, so you don't need to manage deployments yourself.
-</Accordion>
-<Accordion icon="palette" title="Update your site name and colors">
-    For a first change, let's update the name and colors of your docs site.
+    Once submitted, you're logged in automatically and redirected to the home page.
+  </Step>
 
-    1. Open `docs.json` in your editor.
-    2. Change the `"name"` field to your project name.
-    3. Update the `"colors"` to match your brand.
-    4. Save and see your changes instantly at `http://localhost:3000`.
+  <Step title="Browse listings">
+    Go to the **Listings** page (`/listings`) to see all available items.
 
-    <Tip>Try changing the primary color to see an immediate difference!</Tip>
-  </Accordion>
-</AccordionGroup>
+    Use the **search bar** at the top of the page to filter listings by keyword — try searching for a textbook title, a course code, or a category like "electronics".
 
-### Step 3: Go live
+    <Note>
+      Browsing is available without an account. You only need to be logged in to contact sellers, save favorites, or create listings.
+    </Note>
+  </Step>
 
-<Accordion icon="rocket" title="Publish your docs">
-  1. Commit and push your changes.
-  2. Your docs will update and be live in moments!
-</Accordion>
+  <Step title="Save a favorite">
+    When you find a listing you want to revisit, click the **heart icon** on the listing card. The icon toggles the listing in and out of your favorites.
 
-## Next steps
+    Favorited listings are persisted to local storage, so they'll still be marked the next time you open the app in the same browser.
+  </Step>
 
-Now that you have your docs running, explore these key features:
+  <Step title="Contact a seller">
+    Open any listing by clicking on it to go to its detail page (`/listing/:id`).
+
+    Click the **Contact Seller** button to start a chat with the seller. This opens a new conversation in the messaging section, where you can negotiate, ask questions, or arrange the exchange.
+
+    <Tip>
+      Be specific in your first message — mention which listing you're asking about and what you'd like to know. It helps the seller respond faster.
+    </Tip>
+
+    You can return to all your conversations at any time via the **Messages** page (`/chat`).
+  </Step>
+
+  <Step title="Create your first listing">
+    Ready to sell something? Go to the **Create Listing** page (`/create`) to open the listing form.
+
+    Fill in the following fields:
+
+    - **Title**: a clear, descriptive name for the item
+    - **Description**: condition, edition (for textbooks), any relevant details
+    - **Price**: set a number — remember, fair prices attract more buyers
+    - **Category**: choose the category that best fits your item
+    - **Photos**: add one or more images to help buyers know what they're getting
+
+    <Warning>
+      All listing data is stored locally in your browser. If you clear your browser storage or switch devices, your listings will not carry over.
+    </Warning>
+
+    Submit the form and your listing will appear immediately in the listings page with `available` status.
+  </Step>
+</Steps>
+
+## What's next?
+
+Now that you're set up, here are a few things worth exploring:
 
 <CardGroup cols={2}>
-
-<Card title="Write Content" icon="pen-to-square" href="/essentials/markdown">
-  Learn MDX syntax and start writing your documentation.
-</Card>
-
-<Card title="Customize style" icon="palette" href="/essentials/settings">
-  Make your docs match your brand perfectly.
-</Card>
-
-<Card title="Add code examples" icon="square-code" href="/essentials/code">
-  Include syntax-highlighted code blocks.
-</Card>
-
-<Card title="API documentation" icon="code" href="/api-reference/introduction">
-  Auto-generate API docs from OpenAPI specs.
-</Card>
-
+  <Card title="Core features" icon="star" href="/features/listings">
+    Learn about listings, chat, favorites, and your profile in detail.
+  </Card>
+  <Card title="Creating a listing" icon="plus" href="/guides/creating-a-listing">
+    Full guide to writing great listings that attract buyers.
+  </Card>
+  <Card title="Finding items" icon="magnifying-glass" href="/guides/finding-items">
+    Tips for searching and discovering the best deals on campus.
+  </Card>
+  <Card title="Trading guide" icon="arrows-rotate" href="/guides/trading">
+    How to negotiate, meet up safely, and complete a trade.
+  </Card>
 </CardGroup>
-
-<Note>
-  **Need help?** See our [full documentation](https://mintlify.com/docs) or join our [community](https://mintlify.com/community).
-</Note>

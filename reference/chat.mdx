@@ -1,0 +1,103 @@
+---
+title: Chat
+description: Data models for the real-time chat system between buyers and sellers.
+---
+
+The chat system allows a buyer to send messages to the seller of a specific listing. Each conversation is represented by a `Chat` object that contains an array of `ChatMessage` objects.
+
+## Chat
+
+A `Chat` represents the full conversation thread between one buyer and one seller about a specific listing.
+
+<ResponseField name="id" type="string" required>
+  Unique identifier for the chat. Formed by concatenating the listing ID and buyer ID:
+
+  ```
+  "{listingId}-{buyerId}"
+  ```
+
+  For example, `"listing-1747000000000-u1747000000001"`.
+</ResponseField>
+
+<ResponseField name="listingId" type="string" required>
+  The `id` of the `Listing` this conversation is about.
+</ResponseField>
+
+<ResponseField name="listingTitle" type="string" required>
+  A cached copy of the listing's title at the time the chat was created. Stored to display the conversation context even if the listing is later modified.
+</ResponseField>
+
+<ResponseField name="sellerId" type="string" required>
+  The `id` of the user who owns the listing (the seller).
+</ResponseField>
+
+<ResponseField name="buyerId" type="string" required>
+  The `id` of the user who initiated the conversation (the buyer).
+</ResponseField>
+
+<ResponseField name="messages" type="ChatMessage[]" required>
+  Ordered array of messages in this conversation. See [ChatMessage](#chatmessage) below.
+</ResponseField>
+
+## ChatMessage
+
+A `ChatMessage` represents a single message sent within a `Chat`.
+
+<ResponseField name="id" type="string" required>
+  Unique identifier for the message. Generated as `"msg-{timestamp}"` at send time (e.g., `"msg-1747000000000"`).
+</ResponseField>
+
+<ResponseField name="senderId" type="string" required>
+  The `id` of the user who sent the message.
+</ResponseField>
+
+<ResponseField name="text" type="string" required>
+  The message content.
+</ResponseField>
+
+<ResponseField name="time" type="string" required>
+  Formatted timestamp of when the message was sent, in `HH:MM` format (e.g., `"14:35"`).
+</ResponseField>
+
+## Chat ID format
+
+Chat IDs follow a deterministic format: `"{listingId}-{buyerId}"`. This means there is at most one chat per buyer per listing, and the `getOrCreateChat` store action will return the existing chat if one already exists for that combination.
+
+## Storage
+
+Chats are stored in the Zustand store as `Record<string, Chat>`, keyed by chat ID. This makes lookups by ID O(1).
+
+```typescript
+type ChatsRecord = Record<string, Chat>;
+// Example key: "listing-1747000000000-u1747000000001"
+```
+
+## Example
+
+```typescript
+const chat: Chat = {
+  id: "listing-1747000000000-u1747000000001",
+  listingId: "listing-1747000000000",
+  listingTitle: "Cálculo diferencial - Stewart",
+  sellerId: "u1747000000002",
+  buyerId: "u1747000000001",
+  messages: [
+    {
+      id: "msg-1747000010000",
+      senderId: "u1747000000001",
+      text: "Hola, ¿sigue disponible?",
+      time: "10:30"
+    },
+    {
+      id: "msg-1747000020000",
+      senderId: "u1747000000002",
+      text: "Sí, está disponible. ¿Cuándo puedes?",
+      time: "10:32"
+    }
+  ]
+};
+```
+
+<Note>
+  Chats are persisted to localStorage as part of the Zustand store (key `"marketplace-storage"`). They survive page refreshes but are local to the user's browser.
+</Note>

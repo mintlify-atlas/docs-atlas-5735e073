@@ -1,0 +1,221 @@
+---
+title: Store
+description: Global state management for TruequeU using Zustand with persistence.
+---
+
+TruequeU uses [Zustand](https://zustand-demo.pmnd.rs/) for global client-side state management. The store is created with `create()` and wrapped with the `persist` middleware to survive page refreshes.
+
+## Persistence
+
+| Property | Value |
+|---|---|
+| Middleware | `persist` (Zustand) |
+| Storage backend | `localStorage` |
+| localStorage key | `"marketplace-storage"` |
+| Persisted fields | `listings`, `user`, `chats` |
+| Not persisted | `searchQuery` |
+
+<Note>
+  `searchQuery` is intentionally excluded from persistence. The search input resets to an empty string each time the page loads.
+</Note>
+
+---
+
+## State fields
+
+<ResponseField name="listings" type="Listing[]">
+  All listings currently in the marketplace. Persisted to localStorage.
+</ResponseField>
+
+<ResponseField name="user" type="User | null">
+  The currently logged-in user, or `null` if no session is active. Persisted to localStorage so the session survives a refresh.
+</ResponseField>
+
+<ResponseField name="searchQuery" type="string">
+  The current search input value used to filter listings. **Not** persisted — resets to `""` on page load.
+</ResponseField>
+
+<ResponseField name="chats" type="Record<string, Chat>">
+  All chat threads, keyed by chat ID (`"{listingId}-{buyerId}"`). Persisted to localStorage. See the [Chat reference](/reference/chat) for the data model.
+</ResponseField>
+
+---
+
+## Actions
+
+### addListing
+
+Adds a new listing to the store.
+
+<ParamField path="body.item" type="Listing" required>
+  The complete `Listing` object to add. The caller is responsible for generating the `id` and setting all required fields before calling this action.
+</ParamField>
+
+---
+
+### updateStatus
+
+Updates the `status` field of an existing listing.
+
+<ParamField path="body.id" type="string" required>
+  The `id` of the listing to update.
+</ParamField>
+
+<ParamField path="body.status" type="ListingStatus" required>
+  The new status value: `"available"`, `"reserved"`, or `"sold"`.
+</ParamField>
+
+---
+
+### toggleFavorite
+
+Toggles the `isFavorite` boolean on a listing.
+
+<ParamField path="body.id" type="string" required>
+  The `id` of the listing to toggle. If `isFavorite` is `true`, it becomes `false`, and vice versa.
+</ParamField>
+
+---
+
+### login
+
+Sets the active user session in the store.
+
+<ParamField path="body.userData" type="User" required>
+  The `User` object returned by `validateLogin` or `registerUser`.
+</ParamField>
+
+---
+
+### logout
+
+Clears the active user session.
+
+This action takes no parameters. After calling `logout`, `user` becomes `null`.
+
+---
+
+### setSearchQuery
+
+Updates the search query string used to filter the listings view.
+
+<ParamField path="body.query" type="string" required>
+  The new search string. Pass an empty string (`""`) to clear the search.
+</ParamField>
+
+---
+
+### getOrCreateChat
+
+Returns the existing `Chat` for a listing–buyer pair, or creates a new one if none exists.
+
+<ParamField path="body.listingId" type="string" required>
+  The `id` of the listing the chat is about.
+</ParamField>
+
+<ParamField path="body.listingTitle" type="string" required>
+  The title of the listing. Cached on the `Chat` object for display purposes.
+</ParamField>
+
+<ParamField path="body.sellerId" type="string" required>
+  The `id` of the user who owns the listing.
+</ParamField>
+
+<ParamField path="body.buyerId" type="string" required>
+  The `id` of the user initiating the conversation.
+</ParamField>
+
+<ResponseField name="Chat" type="Chat">
+  The existing or newly created `Chat` object. See the [Chat reference](/reference/chat).
+</ResponseField>
+
+---
+
+### addChatMessage
+
+Appends a new message to an existing chat.
+
+<ParamField path="body.chatId" type="string" required>
+  The `id` of the chat to send the message to.
+</ParamField>
+
+<ParamField path="body.senderId" type="string" required>
+  The `id` of the user sending the message.
+</ParamField>
+
+<ParamField path="body.text" type="string" required>
+  The message content.
+</ParamField>
+
+---
+
+## Using the store in a component
+
+Use the `useStore` hook with a selector to subscribe to specific slices of state. This avoids unnecessary re-renders when unrelated parts of the store change.
+
+```tsx
+import { useStore } from '../store/useStore';
+
+function MyComponent() {
+  const listings = useStore((state) => state.listings);
+  const addListing = useStore((state) => state.addListing);
+  // ...
+}
+```
+
+<Tip>
+  Always use selectors (e.g., `state => state.listings`) rather than subscribing to the entire store object. This keeps components efficient and only re-renders when the selected value changes.
+</Tip>
+
+### Common patterns
+
+<CodeGroup>
+
+```tsx Read state
+import { useStore } from '../store/useStore';
+
+function ListingsFeed() {
+  const listings = useStore((state) => state.listings);
+  const searchQuery = useStore((state) => state.searchQuery);
+
+  const filtered = listings.filter((l) =>
+    l.title.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  return <>{filtered.map((l) => <ListingCard key={l.id} listing={l} />)}</>;
+}
+```
+
+```tsx Write state
+import { useStore } from '../store/useStore';
+
+function FavoriteButton({ listingId }: { listingId: string }) {
+  const toggleFavorite = useStore((state) => state.toggleFavorite);
+
+  return (
+    <button onClick={() => toggleFavorite(listingId)}>
+      Toggle favorite
+    </button>
+  );
+}
+```
+
+```tsx Auth actions
+import { useStore } from '../store/useStore';
+import { validateLogin } from '../services/auth.service';
+
+function LoginForm() {
+  const login = useStore((state) => state.login);
+
+  const handleSubmit = (email: string, password: string) => {
+    const user = validateLogin(email, password);
+    if (user) {
+      login(user);
+    }
+  };
+
+  // ...
+}
+```
+
+</CodeGroup>

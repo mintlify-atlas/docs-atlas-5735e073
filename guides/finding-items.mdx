@@ -1,0 +1,56 @@
+---
+title: "Finding items"
+description: "How to browse, search, and save listings on TruequeU."
+---
+
+TruequeU makes it easy to discover items posted by other students at your university. You can browse featured picks on the home page, search the full catalogue, or save listings to revisit later.
+
+## Browsing flow
+
+<Steps>
+  <Step title="Start on the home page">
+    The home page (`/`) shows **6 featured listings** drawn from the combined pool of seed and user-created listings. This is a good starting point to see what's available without committing to a full search.
+  </Step>
+
+  <Step title="Go to the full listings page">
+    Click **See All listings** on the home page, or navigate directly to `/listings`. This shows every listing in the store.
+  </Step>
+
+  <Step title="Use the search bar to filter">
+    Type into the search bar to filter listings in real time. The search matches against the listing **title** and is case-insensitive.
+
+    <Tip>
+      Search matches any substring of the title, so partial words work. Searching `calc` will surface listings titled "Calculus textbook", "Calculator (TI-84)", and similar. Try broader terms first if you don't find results immediately.
+    </Tip>
+  </Step>
+
+  <Step title="Read listing cards">
+    Each listing card shows:
+    - **Title** — the item name
+    - **Price** — the listed amount
+    - **Category** — the item type
+    - **Status badge** — `available`, `reserved`, or `sold`
+
+    Only listings with an `available` status can be purchased. Reserved or sold listings are visible but no longer open for new trades.
+  </Step>
+
+  <Step title="Open the listing detail">
+    Click any listing card to open its full detail page at `/listing/:id`. Here you can see the full description, all images, and the **Contact Seller** button to start a chat.
+  </Step>
+
+  <Step title="Save listings to favorites">
+    Click the heart icon on any listing card or detail page to toggle it as a favorite. Favorited listings are tracked in the store via `toggleFavorite` and are easy to return to later from your profile.
+  </Step>
+</Steps>
+
+## Understanding listing status
+
+| Status | Meaning |
+|---|---|
+| `available` | The item is open for inquiries and trades. |
+| `reserved` | The seller is in active negotiation with a buyer. |
+| `sold` | The trade is complete. The item is no longer available. |
+
+<Info>
+  Listings with a `reserved` or `sold` status are still displayed in search results and on the listings page, but the **Contact Seller** button is only actionable for `available` listings.
+</Info>

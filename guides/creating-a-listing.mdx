@@ -1,0 +1,68 @@
+---
+title: "Creating a listing"
+description: "How to post an item for sale or trade on TruequeU."
+---
+
+Listings are the core of TruequeU. Once you publish one, it appears immediately in the marketplace and on the home page featured pool.
+
+<Warning>
+  All fields are validated before submission. The form will not submit if any field is outside the allowed range. Check the requirements for each field below before filling out the form.
+</Warning>
+
+## Steps to create a listing
+
+<Steps>
+  <Step title="Navigate to the create form">
+    Go to `/create` in your browser, or click the **+ New Listing** button from your profile page.
+  </Step>
+
+  <Step title="Write a title">
+    Enter a title that clearly describes the item. The title must be between **3 and 100 characters**.
+
+    <Tip>
+      A good title is specific and scannable. Include the item name, brand, or condition — for example, "Calculus textbook (Stewart, 8th ed.)" rather than just "Book". Buyers search by title, so descriptive words increase visibility.
+    </Tip>
+  </Step>
+
+  <Step title="Write a description">
+    Describe the item in detail. The description must be between **10 and 1,000 characters**.
+
+    Good descriptions answer common questions upfront:
+    - What condition is the item in?
+    - Are there any defects, wear, or missing parts?
+    - Why are you selling it?
+    - Are you open to trades or negotiation?
+  </Step>
+
+  <Step title="Set a price">
+    Enter a numeric price between **0 and 999,999**. Use `0` if you want to list an item as free or open to trade.
+  </Step>
+
+  <Step title="Choose a category">
+    Select the category that best fits your item. Categories help buyers browse and filter listings in their area of interest.
+  </Step>
+
+  <Step title="Add images">
+    Provide image URLs for your listing. Clear, well-lit photos from multiple angles help buyers make faster decisions and reduce back-and-forth questions.
+  </Step>
+
+  <Step title="Submit the listing">
+    Click **Submit**. The listing is validated, added to the store via `addListing`, and immediately visible at `/listings` and on the home page featured listings.
+  </Step>
+</Steps>
+
+## Field reference
+
+| Field | Required | Constraints |
+|---|---|---|
+| `title` | Yes | 3–100 characters |
+| `description` | Yes | 10–1,000 characters |
+| `price` | Yes | 0–999,999 (number) |
+| `category` | Yes | Select from list |
+| `images` | No | One or more image URLs |
+
+## What happens after you submit
+
+Your listing is created with a status of `available`. It enters the shared listings pool and is immediately searchable. You can update the status later from the listing detail page as the trade progresses — for example, changing it to `reserved` while negotiating or `sold` after completing the exchange.
+
+See the [Trading guide](/guides/trading) for more on managing listing status.

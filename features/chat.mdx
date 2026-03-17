@@ -1,0 +1,85 @@
+---
+title: Chat
+description: Message sellers and buyers directly, tied to a specific listing.
+---
+
+TruequeU's chat feature lets buyers and sellers communicate directly within the platform. Every conversation is linked to a specific listing, so context is always clear.
+
+<Note>You must be signed in to access chat. If you are not logged in, you will be redirected to the sign-in page.</Note>
+
+## Starting a conversation
+
+<Steps>
+  <Step title="Find a listing you want">
+    Browse to `/listings` and open a listing you are interested in.
+  </Step>
+  <Step title="Click Contact Seller">
+    On the listing detail page, click the **Contact Seller** button. This button is only visible if you are logged in and are not the listing owner.
+  </Step>
+  <Step title="Chat opens automatically">
+    TruequeU calls `getOrCreateChat(listingId, listingTitle, sellerId, buyerId)` in the store. If a chat between you and the seller for that listing already exists, it opens that thread. Otherwise a new one is created.
+  </Step>
+  <Step title="Send your first message">
+    Type in the message field at the bottom of the chat and submit the form. The message is added via `addChatMessage(chatId, senderId, text)`.
+  </Step>
+</Steps>
+
+## Chat ID format
+
+Each chat has a deterministic ID based on the listing and the buyer:
+
+```
+{listingId}-{buyerId}
+```
+
+This ensures only one thread exists per buyer–listing pair, regardless of how many times **Contact Seller** is clicked.
+
+## Chat layout
+
+The `/chat` page is split into two panels:
+
+### Sidebar
+
+The left sidebar lists all your conversations — both chats where you are the **buyer** and chats where you are the **seller**. Each entry shows the listing title the chat is about.
+
+### Message area
+
+The active chat is shown on the right. Messages are laid out as follows:
+
+| Position | Who | Style |
+|---|---|---|
+| Right-aligned | Your messages (sender) | Indigo background |
+| Left-aligned | Their messages (receiver) | Slate background |
+
+The chat header shows the **listing title** and includes a link to view the related listing detail page.
+
+<Tip>Use the link in the chat header to quickly jump back to the listing, check its current status, or share the URL with someone.</Tip>
+
+## Data model
+
+Chats and messages are stored in the Zustand store using these types:
+
+```typescript
+interface ChatMessage {
+  id: string;
+  senderId: string;
+  text: string;
+  time: string;
+}
+
+interface Chat {
+  id: string;           // "{listingId}-{buyerId}"
+  listingId: string;
+  listingTitle: string;
+  sellerId: string;
+  buyerId: string;
+  messages: ChatMessage[];
+}
+```
+
+## Store actions
+
+| Action | Description |
+|---|---|
+| `getOrCreateChat(listingId, listingTitle, sellerId, buyerId)` | Returns the existing chat or creates a new one |
+| `addChatMessage(chatId, senderId, text)` | Appends a new message to the chat |

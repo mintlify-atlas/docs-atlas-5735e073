@@ -1,0 +1,86 @@
+---
+title: "Trading"
+description: "How to contact a seller, negotiate, and complete a trade on TruequeU."
+---
+
+TruequeU is built around in-person peer-to-peer trades between university students. The platform handles discovery and communication; the exchange itself happens face to face.
+
+## Trading workflow
+
+<Steps>
+  <Step title="Find a listing">
+    Browse the home page featured listings or go to `/listings` to search the full catalogue. Use the search bar to filter by title. See the [Finding items guide](/guides/finding-items) for full details.
+  </Step>
+
+  <Step title="Check the listing status">
+    Open the listing detail page at `/listing/:id`. Confirm the status badge shows **available** before proceeding. Listings marked `reserved` or `sold` are no longer open for new trades.
+  </Step>
+
+  <Step title="Contact the seller">
+    Click **Contact Seller** on the listing detail page. This requires you to be logged in.
+
+    Clicking the button calls `getOrCreateChat(listingId, listingTitle, sellerId, buyerId)`, which either creates a new chat or returns an existing one for this listing. You are redirected to `/chat/:chatId`.
+
+    <Note>
+      Each chat is linked to a specific listing. If you contact the same seller about a different item, a separate chat is created.
+    </Note>
+  </Step>
+
+  <Step title="Negotiate in chat">
+    Use the chat to coordinate the trade. A productive opening message typically covers:
+
+    - A brief introduction (your name and faculty)
+    - Confirmation that the item is still available
+    - Any questions about the item's condition or details
+    - A price offer or request to negotiate if relevant
+    - A proposed meeting location and time
+
+    Messages are sent using `addChatMessage(chatId, senderId, text)` and appear in real time.
+  </Step>
+
+  <Step title="Meet up and exchange">
+    Agree on a campus location that is public and convenient for both parties. Complete the exchange in person.
+
+    <Tip>
+      Prefer busy, well-lit campus locations such as a library entrance, student union, or cafeteria. Avoid meeting in private spaces. Inspect the item before completing the exchange.
+    </Tip>
+  </Step>
+
+  <Step title="Update the listing status">
+    After a successful trade, the seller should update the listing status from the detail page:
+
+    - Set to **reserved** (`updateStatus(id, "reserved")`) once you've agreed to a deal and are waiting for the meetup.
+    - Set to **sold** (`updateStatus(id, "sold")`) after the in-person exchange is complete.
+
+    Keeping the status current helps other buyers know the listing is no longer available and reduces unwanted contact messages.
+  </Step>
+</Steps>
+
+## Safe trading tips
+
+<Columns cols={2}>
+  <Card title="Meet in public" icon="users">
+    Always choose a busy, well-lit location on campus. Avoid private residences or isolated areas.
+  </Card>
+  <Card title="Inspect before paying" icon="magnifying-glass">
+    Check the item carefully before completing the exchange. Ask to test electronics or flip through books.
+  </Card>
+  <Card title="Bring exact change" icon="coins">
+    Carry the agreed amount in cash to keep the exchange simple and avoid disputes.
+  </Card>
+  <Card title="Trust your instincts" icon="shield">
+    If something feels off, it is fine to cancel. Your safety takes priority over any deal.
+  </Card>
+</Columns>
+
+## How status changes signal progress
+
+The listing status is the shared signal between buyer and seller about where a trade stands:
+
+| Status | When to use |
+|---|---|
+| `available` | Default state. The item is open for contact and offers. |
+| `reserved` | A deal has been agreed in chat and a meetup is scheduled. |
+| `sold` | The exchange is complete. The listing is closed. |
+
+Buyers can use these status cues to prioritize their search — focusing on `available` listings and skipping ones that are already moving toward completion.

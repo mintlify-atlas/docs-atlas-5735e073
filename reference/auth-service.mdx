@@ -1,0 +1,180 @@
+---
+title: Auth service
+description: Functions for user authentication and registration in TruequeU.
+---
+
+The auth service (`src/services/auth.service.ts`) provides functions for login validation, user registration, email availability checks, and password strength validation.
+
+## validateLogin
+
+Verifies a user's credentials and returns the matching `User` object on success.
+
+```typescript
+validateLogin(email: string, password: string): User | null
+```
+
+### Parameters
+
+<ParamField path="body.email" type="string" required>
+  The email address entered by the user. Comparison is case-insensitive.
+</ParamField>
+
+<ParamField path="body.password" type="string" required>
+  The password entered by the user.
+</ParamField>
+
+### Returns
+
+<ResponseField name="User | null" type="User | null">
+  Returns a `User` object (`{ id, email, name }`) if the credentials are valid, or `null` if login fails.
+</ResponseField>
+
+### Lookup order
+
+1. Checks users registered via `registerUser` and stored in localStorage under `"trueque-registered-users"`.
+2. Falls back to seed users defined in `src/data/users.ts`.
+
+### Example
+
+```typescript
+import { validateLogin } from '../services/auth.service';
+
+const user = validateLogin('Ana.Garcia@universidad.edu.co', 'SecurePass1!');
+if (user) {
+  // user = { id: 'u1747000000000', email: 'ana.garcia@universidad.edu.co', name: 'Ana García' }
+} else {
+  // Invalid credentials
+}
+```
+
+---
+
+## registerUser
+
+Creates a new user account and persists it to localStorage.
+
+```typescript
+registerUser({ email, name, password }: { email: string; name: string; password: string }): User
+```
+
+### Parameters
+
+<ParamField path="body.email" type="string" required>
+  The user's email address. Stored as lowercase and trimmed.
+</ParamField>
+
+<ParamField path="body.name" type="string" required>
+  The user's display name.
+</ParamField>
+
+<ParamField path="body.password" type="string" required>
+  The user's chosen password. Must satisfy all rules enforced by `validatePassword`.
+</ParamField>
+
+### Returns
+
+<ResponseField name="User" type="User">
+  The newly created user object `{ id, email, name }`. The password is not included in the return value.
+</ResponseField>
+
+### Behavior
+
+- Generates `id` as `"u{Date.now()}"` (e.g., `"u1747000000000"`).
+- Stores `email` as lowercase and trimmed.
+- Saves the new user (including password) to localStorage under the key `"trueque-registered-users"`.
+- Returns only the public `User` fields — never the password.
+
+### Example
+
+```typescript
+import { registerUser } from '../services/auth.service';
+
+const newUser = registerUser({
+  email: '  Carlos.Lopez@uni.edu.co  ',
+  name: 'Carlos López',
+  password: 'MiClave99!'
+});
+// newUser = { id: 'u1747000000000', email: 'carlos.lopez@uni.edu.co', name: 'Carlos López' }
+```
+
+---
+
+## isEmailTaken
+
+Checks whether an email address is already in use.
+
+```typescript
+isEmailTaken(email: string): boolean
+```
+
+### Parameters
+
+<ParamField path="body.email" type="string" required>
+  The email address to check. Comparison is case-insensitive.
+</ParamField>
+
+### Returns
+
+<ResponseField name="boolean" type="boolean">
+  `true` if the email is already registered (either in seed users or in localStorage), `false` otherwise.
+</ResponseField>
+
+### Example
+
+```typescript
+import { isEmailTaken } from '../services/auth.service';
+
+if (isEmailTaken('ana.garcia@universidad.edu.co')) {
+  console.log('Email already in use');
+}
+```
+
+---
+
+## validatePassword
+
+Checks whether a password meets all security requirements.
+
+```typescript
+validatePassword(password: string): { valid: boolean; message: string }
+```
+
+### Parameters
+
+<ParamField path="body.password" type="string" required>
+  The password string to validate.
+</ParamField>
+
+### Returns
+
+<ResponseField name="valid" type="boolean" required>
+  `true` if all requirements are met, `false` otherwise.
+</ResponseField>
+
+<ResponseField name="message" type="string" required>
+  A human-readable message describing the validation result. Empty or a success message when `valid` is `true`; an explanation of the first failing rule when `valid` is `false`.
+</ResponseField>
+
+### Password requirements
+
+All of the following must be satisfied:
+
+| Rule | Requirement |
+|---|---|
+| Minimum length | At least 8 characters |
+| Uppercase letter | At least one uppercase letter (`A`–`Z`) |
+| Lowercase letter | At least one lowercase letter (`a`–`z`) |
+| Digit | At least one numeric digit (`0`–`9`) |
+| Special character | At least one special character (e.g., `!`, `@`, `#`, `$`) |
+
+### Example
+
+```typescript
+import { validatePassword } from '../services/auth.service';
+
+const result = validatePassword('abc');
+// result = { valid: false, message: 'La contraseña debe tener al menos 8 caracteres' }
+
+const result2 = validatePassword('SecurePass1!');
+// result2 = { valid: true, message: '' }
+```

@@ -1,0 +1,79 @@
+---
+title: Introduction
+description: TruequeU is a peer-to-peer marketplace built for university students to buy, sell, and trade items on campus.
+---
+
+## What is TruequeU?
+
+TruequeU is a student-to-student marketplace designed for university communities. It gives students a dedicated space to buy and sell used textbooks, electronics, furniture, and other campus essentials — directly from one another, without intermediaries or platform fees.
+
+The name comes from _trueque_ (Spanish for "barter" or "exchange"), reflecting the app's focus on fair peer-to-peer trade within a trusted campus environment.
+
+## The problem it solves
+
+University students routinely face the same challenge: course materials and everyday items are expensive to buy new, but selling or finding them through general-purpose platforms means competing with non-student sellers, dealing with shipping logistics, and trusting strangers outside the campus community.
+
+TruequeU addresses this by creating a focused marketplace where:
+
+- Students can list used textbooks, electronics, and other items at fair prices
+- Buyers can search and filter listings relevant to their campus needs
+- Both parties communicate directly through in-app chat before any exchange
+- All interactions stay within the university community
+
+## Core concepts
+
+### Listings
+
+A listing represents an item a student wants to sell or trade. Each listing has a title, description, price, category, and one or more photos. Listings carry a status — `available`, `reserved`, or `sold` — so buyers always know what's still on the market.
+
+### Chat
+
+Once a buyer finds a listing they're interested in, they can contact the seller directly through TruequeU's built-in messaging system. Each conversation is tied to a specific listing, keeping communication focused and organized.
+
+### Favorites
+
+Students can save listings they're interested in by marking them as favorites. The heart icon on any listing card toggles the favorite state, making it easy to track items across browsing sessions.
+
+### Profile
+
+Every registered user has a profile page that displays their account information and all the listings they've created. This gives buyers visibility into a seller's other items and history.
+
+## Who it's for
+
+TruequeU is built for university students who want to:
+
+- **Sell** items they no longer need — textbooks from last semester, electronics, dorm furniture
+- **Buy** items at fair student prices from peers in the same campus community
+- **Find** specific items quickly using search and category filters
+
+No account is needed to browse listings, but you must be registered to contact sellers, save favorites, or create listings.
+
+## Architecture overview
+
+TruequeU is a fully client-side application with no backend server.
+
+- **Frontend**: React with TypeScript, bundled with Vite
+- **State management**: Zustand stores manage application state (listings, auth, favorites, chat) and persist all data to `localStorage`
+- **Data persistence**: All user accounts, listings, messages, and favorites are stored in the browser's `localStorage`. This means data is local to the browser — clearing storage or switching browsers starts fresh.
+- **Seed data**: The app ships with seed listings and demo user accounts so the marketplace feels populated from the first visit
+
+<Note>
+  Because there is no backend, data does not sync across devices or browsers. Everything lives in your browser's local storage.
+</Note>
+
+## Where to go next
+
+<CardGroup cols={2}>
+  <Card title="Quickstart" icon="rocket" href="/quickstart">
+    Create an account, browse listings, and post your first item in minutes.
+  </Card>
+  <Card title="Browsing listings" icon="magnifying-glass" href="/guides/finding-items">
+    Learn how to search, filter, and save listings you're interested in.
+  </Card>
+  <Card title="Creating a listing" icon="plus" href="/guides/creating-a-listing">
+    Step-by-step guide to posting an item for sale.
+  </Card>
+  <Card title="Messaging" icon="message" href="/features/chat">
+    How to contact sellers and manage your conversations.
+  </Card>
+</CardGroup>

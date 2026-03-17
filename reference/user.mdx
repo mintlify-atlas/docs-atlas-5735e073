@@ -1,0 +1,41 @@
+---
+title: User
+description: Data model for authenticated users of TruequeU.
+---
+
+A `User` represents a student registered on TruequeU. The object contains only public identity fields — the password is never stored in or returned as part of the `User` type.
+
+## Fields
+
+<ResponseField name="id" type="string" required>
+  Unique identifier for the user.
+
+  - For users who register through the app, the ID is auto-generated as `"u{Date.now()}"` (e.g., `"u1747000000000"`).
+  - Seed users defined in `src/data/users.ts` have fixed, pre-assigned IDs.
+</ResponseField>
+
+<ResponseField name="email" type="string" required>
+  The user's email address. Always stored in lowercase and trimmed of leading/trailing whitespace.
+</ResponseField>
+
+<ResponseField name="name" type="string" required>
+  The user's display name shown throughout the interface.
+</ResponseField>
+
+## Example
+
+```typescript
+const user: User = {
+  id: "u1747000000000",
+  email: "ana.garcia@universidad.edu.co",
+  name: "Ana García"
+};
+```
+
+<Note>
+  The `User` type does not include a `password` field. Passwords are validated at login by `validateLogin` and stored separately (hashed or as-is depending on implementation) in localStorage under the key `"trueque-registered-users"`. They are never exposed through the store or returned from service functions.
+</Note>
+
+<Tip>
+  Seed users from `src/data/users.ts` are available in the app by default and have fixed IDs. These are useful for development and testing without going through the registration flow.
+</Tip>

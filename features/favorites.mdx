@@ -1,0 +1,51 @@
+---
+title: Favorites
+description: Save listings you are interested in with a single tap of the heart icon.
+---
+
+Favorites let you mark listings you want to keep track of. The heart icon on each listing card toggles the favorite state on or off.
+
+<Info>Favorites are stored locally in your browser using `localStorage`. They are not synced to your account and will not carry over to other browsers or devices.</Info>
+
+## How to favorite a listing
+
+<Steps>
+  <Step title="Find a listing">
+    Browse to `/listings` or open any listing card.
+  </Step>
+  <Step title="Click the heart icon">
+    Tap the heart icon on the listing card. The icon fills in to indicate the listing is now a favorite.
+  </Step>
+  <Step title="Unfavorite">
+    Tap the heart icon again to remove the listing from your favorites. The icon returns to its empty state.
+  </Step>
+</Steps>
+
+## How it works
+
+Favoriting calls `toggleFavorite(id)` in the Zustand store, which flips the `isFavorite` boolean on the matching listing:
+
+```typescript
+// Listing interface field
+isFavorite: boolean;
+
+// Store action
+toggleFavorite(id: string) → void
+```
+
+The store is configured with Zustand's `persist` middleware, so the `isFavorite` state for all listings is written to `localStorage` and restored on page reload.
+
+## Where favorites appear
+
+There is no dedicated favorites page. Favorited listings are marked inline on listing cards wherever they appear — on the `/listings` browse page and on your `/profile` page.
+
+<Note>To see all your favorited listings in one place, you can browse `/listings` and visually identify the filled heart icons on cards.</Note>
+
+## Persistence behavior
+
+| Scenario | Behavior |
+|---|---|
+| Page reload | Favorites are restored from `localStorage` |
+| Different browser | Favorites are not available (stored locally) |
+| Different device | Favorites are not available (stored locally) |
+| Clearing browser data | Favorites are lost |

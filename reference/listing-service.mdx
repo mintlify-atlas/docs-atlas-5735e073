@@ -1,0 +1,105 @@
+---
+title: Listing service
+description: Validation functions for listing data in TruequeU.
+---
+
+The listing service (`src/services/listing.service.ts`) provides validation logic for listing fields before they are submitted to the store.
+
+## ListingValidation
+
+The return type used by `validateListing`.
+
+<ResponseField name="valid" type="boolean" required>
+  `true` if all validated fields pass their constraints, `false` if any field fails.
+</ResponseField>
+
+<ResponseField name="message" type="string" required>
+  A description of the validation result. Empty or a success message when `valid` is `true`; the reason for failure in Spanish when `valid` is `false`.
+</ResponseField>
+
+---
+
+## validateListing
+
+Validates the `title`, `description`, and `price` fields of a listing before it is created or updated.
+
+```typescript
+validateListing({
+  title,
+  description,
+  price
+}: {
+  title: string;
+  description: string;
+  price: number;
+}): ListingValidation
+```
+
+### Parameters
+
+<ParamField path="body.title" type="string" required>
+  The listing title. Must be between 3 and 100 characters (inclusive).
+</ParamField>
+
+<ParamField path="body.description" type="string" required>
+  The full item description. Must be between 10 and 1000 characters (inclusive).
+</ParamField>
+
+<ParamField path="body.price" type="number" required>
+  The item price. Must be between 0 and 999,999 (inclusive). A value of `0` is valid and represents a free item.
+</ParamField>
+
+### Returns
+
+<ResponseField name="valid" type="boolean" required>
+  `true` if all three fields pass validation.
+</ResponseField>
+
+<ResponseField name="message" type="string" required>
+  Error message in Spanish describing the first failing constraint, or an empty/success string when all fields are valid.
+</ResponseField>
+
+### Validation rules
+
+| Field | Rule | Constraint |
+|---|---|---|
+| `title` | Minimum length | 3 characters |
+| `title` | Maximum length | 100 characters |
+| `description` | Minimum length | 10 characters |
+| `description` | Maximum length | 1000 characters |
+| `price` | Minimum value | 0 |
+| `price` | Maximum value | 999,999 |
+
+<Note>
+  All error messages returned in `message` are written in Spanish. For example: `"El título debe tener al menos 3 caracteres"`.
+</Note>
+
+### Example
+
+```typescript
+import { validateListing } from '../services/listing.service';
+
+// Invalid — title too short
+const r1 = validateListing({
+  title: 'Hi',
+  description: 'Una descripción suficientemente larga.',
+  price: 50000
+});
+// r1 = { valid: false, message: 'El título debe tener al menos 3 caracteres' }
+
+// Invalid — price out of range
+const r2 = validateListing({
+  title: 'Libro de cálculo',
+  description: 'Buen estado, pocas marcas de lápiz.',
+  price: 1000000
+});
+// r2 = { valid: false, message: 'El precio no puede superar 999999' }
+
+// Valid
+const r3 = validateListing({
+  title: 'Libro de cálculo',
+  description: 'Buen estado, pocas marcas de lápiz.',
+  price: 75000
+});
+// r3 = { valid: true, message: '' }
+```

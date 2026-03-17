@@ -1,0 +1,53 @@
+---
+title: Profile
+description: View your account details, manage your listings, and sign out.
+---
+
+The profile page at `/profile` is your personal hub on TruequeU. It shows your account information, all the listings you have published, and quick actions to create new listings or sign out.
+
+## Accessing your profile
+
+If you are not logged in when you navigate to `/profile`, you will be redirected to the sign-in page. Sign in or create an account to continue.
+
+## Profile overview
+
+<Columns cols={2}>
+  <Card title="Avatar" icon="image">
+    A unique avatar generated from the [DiceBear Avataaars](https://www.dicebear.com/) API, seeded with your `user.id`. This means your avatar is always the same across sessions and devices.
+  </Card>
+  <Card title="Account info" icon="user">
+    Your display **name** and **email address** as registered on TruequeU.
+  </Card>
+</Columns>
+
+## Your listings
+
+The profile page lists all listings where `ownerId === user.id`. These are items you have posted for sale or trade.
+
+Each listing is displayed the same way as on the main listings page — with title, price, category, status badge, image, and favorite toggle.
+
+<Tip>Click any listing to open its detail page where you can update its status (available → reserved → sold).</Tip>
+
+## Quick actions
+
+| Action | Description |
+|---|---|
+| **+ New Listing** | Opens the listing creation form so you can post a new item |
+| **Sign Out** | Calls `logout()` in the store and ends your session |
+
+## Avatar generation
+
+Avatars are fetched from the DiceBear API using the `avataaars` style with your user ID as the seed:
+
+```
+https://api.dicebear.com/7.x/avataaars/svg?seed={user.id}
+```
+
+Because the seed is fixed to your `user.id`, the same avatar is always rendered for your account — no upload required.
+
+## Auth actions in the store
+
+| Action | Description |
+|---|---|
+| `login(userData)` | Sets the current user in the store |
+| `logout()` | Clears the current user from the store |
